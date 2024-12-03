@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import * as oracledb from 'oracledb';
+import { parse } from 'url';
 
 @Injectable()
 export class BuscaTimeService {
@@ -48,7 +49,12 @@ export class BuscaTimeService {
       await connection.execute('DELETE FROM plan_table');
       await connection.commit();
 
-      return parseInt(result.rows[0][0], 10);
+    
+      const secondColumns = result.rows.map(row => row[0]).filter(time => time !== null);
+   
+      const totalSeconds = secondColumns.reduce((acc, time) => acc + parseInt(time, 10), 0);
+   
+      return totalSeconds;
 
     } catch(error){
       console.error('Erro ao processar a consulta', error);
