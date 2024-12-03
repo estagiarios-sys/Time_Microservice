@@ -4,24 +4,24 @@ import * as oracledb from 'oracledb';
 @Injectable()
 export class BuscaTimeService {
 
-  private FormaTime(timeInSeconds: number): number {
-    const hours = Math.floor(timeInSeconds / 3600);
-    const minutes = Math.floor((timeInSeconds % 3600) / 60);
-    const seconds = timeInSeconds % 60;
+  // private FormaTime(timeInSeconds: number): number {
+  //   const hours = Math.floor(timeInSeconds / 3600);
+  //   const minutes = Math.floor((timeInSeconds % 3600) / 60);
+  //   const seconds = timeInSeconds % 60;
     
-    // if (hours === 0 && minutes === 0 && seconds === 1) {
-    //   return `${seconds} segundo`;
-    // }
+  //   // if (hours === 0 && minutes === 0 && seconds === 1) {
+  //   //   return `${seconds} segundo`;
+  //   // }
   
-    // const parts = [];
+  //   // const parts = [];
   
-    // if (hours > 0) parts.push(`${hours} ${hours === 1 ? "hora" : "horas"}`);
-    // if (minutes > 0) parts.push(`${minutes} ${minutes === 1 ? "minuto" : "minutos"}`);
-    // if (seconds > 0) parts.push(`${seconds} ${seconds === 1 ? "segundo" : "segundos"}`);
+  //   // if (hours > 0) parts.push(`${hours} ${hours === 1 ? "hora" : "horas"}`);
+  //   // if (minutes > 0) parts.push(`${minutes} ${minutes === 1 ? "minuto" : "minutos"}`);
+  //   // if (seconds > 0) parts.push(`${seconds} ${seconds === 1 ? "segundo" : "segundos"}`);
   
-    return timeInSeconds;
+  //   return timeInSeconds;
 
-  }
+  // }
 
 
   async executeQueryWithTime(query: string): Promise<any> {
@@ -44,19 +44,11 @@ export class BuscaTimeService {
       const planQuery = `SELECT time FROM plan_table`;
       const result = await connection.execute(planQuery);
 
-      let executionPlan = null;
-
-      if(result.rows && result.rows.length > 0){
-        const FirstRowTime = result.rows[0][0];
-        if(FirstRowTime){
-          executionPlan = this.FormaTime(FirstRowTime);
-        }
-      }
 
       await connection.execute('DELETE FROM plan_table');
       await connection.commit();
 
-      return { executionPlan };
+      return parseInt(result.rows[0][0], 10);
 
     } catch(error){
       console.error('Erro ao processar a consulta', error);
