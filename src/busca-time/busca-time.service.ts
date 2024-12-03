@@ -8,8 +8,19 @@ export class BuscaTimeService {
     const hours = Math.floor(timeInSeconds / 3600);
     const minutes = Math.floor((timeInSeconds % 3600) / 60);
     const seconds = timeInSeconds % 60;
+    
+    if (hours === 0 && minutes === 0 && seconds === 1) {
+      return `${seconds} segundo`;
+    }
+  
+    const parts = [];
+  
+    if (hours > 0) parts.push(`${hours} ${hours === 1 ? "hora" : "horas"}`);
+    if (minutes > 0) parts.push(`${minutes} ${minutes === 1 ? "minuto" : "minutos"}`);
+    if (seconds > 0) parts.push(`${seconds} ${seconds === 1 ? "segundo" : "segundos"}`);
+  
+    return parts.join(" ");
 
-    return `${hours}h ${minutes}m ${seconds}s`;
   }
 
 
